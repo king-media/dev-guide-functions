@@ -20,18 +20,18 @@ This repo holds all code in the [Dev Guide Playlist](https://www.youtube.com/pla
 
 The lessons are split between a visual representation that is ran within the browser or within Node. Here are the steps to execute the JS lesson files within either environment:
 
-*see package.json for scripts*
+_see package.json for scripts_
 
 ### Node ENV
 
-1. run the `execute_ npm` script. The script takes a "file" argument.
+1. run the `execute npm` script. The script takes a "file" argument.
 
 - `npm run execute --file=[lesson-file]`
-  Ex: 
-  
+  Ex:
+
   ```
    $ npm run execute --file=base-functions
-  
+
     > functions_breakdown@1.0.0 execute
     > npm run build && node ./dist/$npm_config_file
 
@@ -52,17 +52,17 @@ The lessons are split between a visual representation that is ran within the bro
     12,80,25,68,19,90K7NG
     string
     false
-    ```
+  ```
 
 ### Chrome ENV
 
 1. run the `serve` npm script.
 
-  ```
-  $ npm run serve
-  
-   > functions_breakdown@1.0.0 serve
-   > open http://localhost:8080/ && node ./server
-  ```
+```
+$ npm run serve
+
+ > functions_breakdown@1.0.0 serve
+ > open http://localhost:8080/ && node ./server
+```
 
 The server will run on localhost:8080
