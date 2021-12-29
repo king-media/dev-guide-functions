@@ -1,0 +1,60 @@
+* {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  letter-spacing: 0.2rem;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8rem 1rem;
+  background-color: #eee;
+}
+
+.game-container {
+  width: 970px;
+}
+
+.game-container > div {
+  text-align: center;
+}
+
+.timer-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3rem;
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.timer-container #clock-sec {
+  color: orangered;
+}
+
+.flex-row {
+  display: flex;
+  justify-content: space-around;
+  padding: 5rem;
+}
+
+.celtics-container span:first-child {
+  padding: 0.5rem;
+  border-bottom: 4px solid forestgreen;
+}
+
+.celtics-container strong, #team1-score {
+  font-size: 16px;
+  font-weight: 600;
+  color: forestgreen;
+}
+
+.grizzles-container span:first-child {
+  padding: 0.5rem;
+  border-bottom: 4px solid rgb(104, 212, 254);
+}
+
+.grizzles-container strong, #team2-score {
+  font-size: 16px;
+  font-weight: 600;
+  color: rgb(104, 212, 254);
+}
