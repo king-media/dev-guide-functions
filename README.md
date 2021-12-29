@@ -1,11 +1,11 @@
 # Dev Guide Functions Edition
 
-This repo holds all code in the (Dev Guide Playlist)[https://www.youtube.com/playlist?list=PLRq7FfI6aZt4QpOy-8ccgEy2lPmRrjwKZ] that relates to functions. I will outline clear instructions on how to execute code in the browser and within Node.
+This repo holds all code in the [Dev Guide Playlist](https://www.youtube.com/playlist?list=PLRq7FfI6aZt4QpOy-8ccgEy2lPmRrjwKZ) that relates to functions. I will outline clear instructions on how to execute code in the browser and within Node.
 
 ## Requirements
 
-- (Node.js)[https://nodejs.org/]
-- (Chrome)[https://www.google.com/chrome/]: All html files will have an execution script that automatically runs in Chrome. If you wish to open html files in a different browser you must manually open the html file within your file system.
+- [Node.js](https://nodejs.org/)
+- [Chrome](https://www.google.com/chrome/): All html files will have an execution script that automatically runs in Chrome. If you wish to open html files in a different browser you must manually open the html file within your file system.
 
 ## Folder Outline
 
