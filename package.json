@@ -19,6 +19,7 @@
     "execute": "npm run build && node ./dist/$npm_config_file",
     "serve": "open http://localhost:8080/ && node ./server",
     "start": "npm-run-all build serve",
+    "debug": "~/Applications/Chrome Apps.localized/ --remote-debugging-port=9222 && node ./server",
     "transpile": "babel ./lessons --out-dir dist",
     "clean": "rimraf dist-server"
   },

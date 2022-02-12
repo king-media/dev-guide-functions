@@ -10,7 +10,6 @@
 
 */
 
-
 // _________ Base (Recap...) ______________
 
 /*
@@ -22,13 +21,13 @@
  
  */
 
- function exampleBaseFunc(param1, param2) {
-   //... function body (block of code)
-   return `function arguments... arg 1: ${param1} | arg 2: ${param2}`
- }
+function exampleBaseFunc(param1, param2) {
+  //... function body (block of code)
+  return `function arguments... arg 1: ${param1} | arg 2: ${param2}`
+}
 
- console.log(exampleBaseFunc('We are', 'GREAT!'))
- /* 
+console.log(exampleBaseFunc('We are', 'GREAT!'))
+/* 
  
  Ex: Methods - The attached function that Objects can have that extends/modifies functionality. So String.toLowerCase()
 
@@ -45,23 +44,22 @@
 ------
 */
 
-const clockMinElem = document.getElementById('clock-min');
-const clockSecElem = document.getElementById('clock-sec');
-const team1Score = document.getElementById('team1-score');
-const team2Score = document.getElementById('team2-score');
+const clockMinElem = document.getElementById('clock-min')
+const clockSecElem = document.getElementById('clock-sec')
+const team1Score = document.getElementById('team1-score')
+const team2Score = document.getElementById('team2-score')
 
 let clock = 720
 
 function pad(val) {
-  let valString = val + "";
+  let valString = val + ''
 
   if (valString.length < 2) {
-    return "0" + valString;
+    return '0' + valString
   } else {
-    return valString;
+    return valString
   }
 }
-
 
 function setTeamScore(team, score) {
   team.innerHTML = score
@@ -70,7 +68,7 @@ function setTeamScore(team, score) {
 function logScore(team, score) {
   const scoreSheet = {
     oldScore: team.innerHTML,
-    newScore: score
+    newScore: score,
   }
 
   console.table(scoreSheet)
@@ -98,11 +96,10 @@ function generateScore() {
     const whichTeam = Math.round(Math.random())
     const points = Math.floor(whichTeam * (3 - 2) + 2)
     // whichTeam ? team1Score.innerHTML = parseInt(team1Score.innerHTML) + points : team2Score.innerHTML = parseInt(team2Score.innerHTML) + points
-    applyScore(whichTeam, points, setTeamScore);
+    applyScore(whichTeam, points, setTeamScore)
     applyScore(whichTeam, points, logScore)
   }
 }
-
 
 // a generic number function that will return the desired mod.
 function modifyNumber(num, modifier, modifierCb) {
@@ -111,11 +108,11 @@ function modifyNumber(num, modifier, modifierCb) {
 
 // Countdown clock
 function countdownClock() {
-  --clock;
-  clockMinElem.innerHTML = modifyNumber(clock / 60, 'pad', parseInt);
-  clockSecElem.innerHTML = modifyNumber(clock % 60, 'pad');
+  --clock
+  clockMinElem.innerHTML = modifyNumber(clock / 60, 'pad', parseInt)
+  clockSecElem.innerHTML = modifyNumber(clock % 60, 'pad')
 
-  if (clock == "0" || clock === "00:00") {
+  if (clock == '0' || clock === '00:00') {
     clearInterval(clockIntervalId)
   }
 }
@@ -127,6 +124,3 @@ function intervalCallback() {
 }
 
 const clockIntervalId = setInterval(intervalCallback, 1000)
-
-
-
