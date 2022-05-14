@@ -56,6 +56,8 @@ _see package.json for scripts_
 
 ### Chrome ENV
 
+**`npm start` will execute the build and serve script below for you.**
+
 1. run the `serve` npm script.
 
 ```
