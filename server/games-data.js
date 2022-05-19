@@ -1,14 +1,18 @@
+/*
+  Promises:
+
+  - An API that allows for smarter handling of ASYNC work. It's really an object.
+  - Usually used in conjunction w/ base & async functions that RETURN a promise.
+  - Promises also utilize callbacks as well.
+
+  Ex: THINK ABOUT THE NAME (PROMISES) - Object: "I promise to give you info when I am done.""
+*/
+
 /* 
 Make a http request to get the 1st 10 games
 
-- We need to know what the last page is in order to get the last 10 games and display them on the front end.
+- We need to know what the last page is in order to get the last 10 games and display them on the front end. (API has pagination but doesn't fetch games in DESC)
 
-DTO: {
-  total_pages: number,
-  last_page: number,
-  per_page: 10,
-  season: string
-}
 */
 
 const https = require('https')
@@ -40,8 +44,8 @@ const mapPlayerStats = (teamId, playerStats) => {
     .filter(data => data.team.id === teamId)
     .map((teamStats) => ({
       ...teamStats,
-      game: teamStats.game.id,
-      team: teamStats.team.id,
+      gameId: teamStats.game.id,
+      teamId: teamStats.team.id,
     }))
   
   const leadingStats = stats.find(teamStats => teamStats.pts === Math.max(...stats.map(allStats => allStats.pts)))
@@ -68,6 +72,17 @@ const mapGameStatsData = (data, homeTeamId, visitorTeamId) => {
 
   return { home_team, visitor_team }
 }
+
+/* 
+NOTES:
+
+This method grabs the data neccessary to fetch the last 10 or so games.
+The method returns an async Promise that can either "resolves" (no errors & has data) or "rejects" (errors & does not have data).
+
+PSEUDO - I "metaRequest" promise(toResolve, orToReject) => { ...when code } is done.
+
+Keep the above PSEUDO in mind for the rest of the methods below.
+*/
 
 const metaRequest = (season = year) => {
   let responseData = { season }

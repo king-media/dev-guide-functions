@@ -32,6 +32,25 @@ const cssRoute = (req, res) => {
   }
 }
 
+const jsRoute = (req, res) => {
+  if (req.url.match('.js$')) {
+      const jsFileName = req.url.split('/').pop()
+      const jsPath = path.join(cwd, req.url)
+      const jsFileStream = fs.createReadStream(jsPath, 'UTF-8')
+      const distPath = `${cwd}/dist/${jsFileName}`
+
+    res.writeHead(200, { 'Content-Type': 'text/javascript' })
+    jsFileStream.pipe(res)
+  }
+}
+
+/* 
+"gamesRequest" returns a promise that can resolve ("then") or reject ("catch")
+
+Think: "Make games request then send the results to the client. If there is an error, then catch and handle that error."
+
+*/
+
 const gamesDataRoute = (req, res) => {
   if (req.url.match('/games')) {
     res.removeHeader('Transfer-Encoding')
@@ -87,25 +106,13 @@ const gameStatsDataRoute = (req, res) => {
   }
 }
 
-const jsRoute = (req, res) => {
-  if (req.url.match('.js$')) {
-      const jsFileName = req.url.split('/').pop()
-      const jsPath = path.join(cwd, req.url)
-      const jsFileStream = fs.createReadStream(jsPath, 'UTF-8')
-      const distPath = `${cwd}/dist/${jsFileName}`
-
-    res.writeHead(200, { 'Content-Type': 'text/javascript' })
-    jsFileStream.pipe(res)
-  }
-}
-
 module.exports = {
   routes: (req, res) => {
     readHtmlAndAssets(req.url)
     htmlRoute(req, res)
-    gamesDataRoute(req, res)
-    gameStatsDataRoute(req, res)
     cssRoute(req, res)
     jsRoute(req, res)
+    gamesDataRoute(req, res)
+    gameStatsDataRoute(req, res)
   },
 }

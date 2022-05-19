@@ -15,6 +15,15 @@ body {
   padding: 8rem 1rem;
   background-color: #eee;
 }
+hr {
+  border: 0;
+  clear:both;
+  display:block;
+  width: 96%;               
+  height: 1px;
+  margin: 1rem;
+  background-color: black;
+}
 
 .load-wrapp {
   width: 200px;
@@ -114,7 +123,12 @@ body {
 }
 
 /* Classes */
-
+.pa-0 {
+  padding: 0;
+}
+.pa-1 {
+  padding: 1rem;
+}
 .pa-2 {
   padding: 2rem;
 }

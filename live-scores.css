@@ -2,16 +2,37 @@
   padding: 0.83rem;
 }
 
+#date {
+  min-width: 2.5rem;
+}
+
 .game-row {
   background-color: gainsboro;
   border-bottom: 2px solid rgb(76, 72, 72);
   border-radius: 4px;
+  padding: 2rem;
+  margin-bottom: 1rem;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   -ms-border-radius: 4px;
   -o-border-radius: 4px;
 }
 
-/* .stats-row {
-  display: none;
-} */
+.stats-col {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  border: 1px solid black;
+  margin-bottom: 1rem;
+}
+
+.stats-row {
+  overflow-y: hidden;
+  overflow-x: scroll;
+  white-space: nowrap;
+  padding: 0.5rem;
+}
+
+.player-info {
+  width: 40rem;
+}

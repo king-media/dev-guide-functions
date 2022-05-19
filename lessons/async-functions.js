@@ -4,41 +4,21 @@ const gameContainer = document.querySelector('.game-container')
 const loadingSpinner = document.querySelector('.load-wrapp')
 
 let games = []
-// Implement proxy in order to validate and deep update state & re-render here...
-// const handleGameState = () => ({
-//    get(obj, prop) {
-// 			if (prop === '_isProxy') return true;
 
-//       if (obj[prop] === undefined || obj[prop] === null) return obj[prop]
-
-// 			if (typeof obj[prop] === 'object' && !obj[prop]._isProxy) {
-// 				obj[prop] = new Proxy(obj[prop], handleGameState());
-// 			}
-
-// 			return obj[prop];
-// 		},
-// 		set(obj, prop, value) {
-// 			if (obj[prop] === value) return true;
-			
-//       obj[prop] = value;
-//       // call debounced version of update method here...
-// 			return true;
-// 		},
-// 		deleteProperty(obj, prop) {
-// 			delete obj[prop];
-// 			return true;
-// 		}
-// });
-
-// Component creation
-
+/*
+ Async/Await:
+ 
+ - Defined w/ an async signature. This allows for more readable async code.
+ - Utilizes Async/Await syntax that allows you to "await" for a Promise to resolve or reject.
+ - Async function always returns a promise.
+ - MUST use a Try/Catch block for correct error handling.
+*/
 
 // Make API call and receive data
 const getGames = async () => {
   let gamesState = sessionStorage.getItem('games')
 
   if (gamesState) {
-    // games = new Proxy(JSON.parse(gamesState), handleGameState())
     games = JSON.parse(gamesState)
     loadingSpinner.style.display = 'none'
     return { success: true, error: null }
@@ -48,7 +28,6 @@ const getGames = async () => {
     const gamesFetchResponse = await fetch(`${localURL}/games`)
     gamesState = await gamesFetchResponse.json()
 
-    // games = new Proxy(gamesState.data, handleGameState())
     games = gamesState.data
     loadingSpinner.style.display = 'none'
     
@@ -88,6 +67,34 @@ const toggleGameStats = async (gameId, homeTeamId, visitorTeamId) => {
   updateAndRender(gameId)
 }
 
+const returnTeamStats = (teamInfo) => {
+  const statsComp = teamInfo.stats.map(playerStats => {
+    const cloneStats = { ...playerStats }
+    const fullName = `${cloneStats.player.first_name} ${cloneStats.player.last_name}`
+    const { position } = cloneStats.player
+
+    // Remove props we don't want displayed w/o mutating data.
+    delete cloneStats.id
+    delete cloneStats.gameId
+    delete cloneStats.teamId
+    delete cloneStats.player
+    delete cloneStats.team
+    delete cloneStats.game
+
+    const statRow = Object.keys(cloneStats).map(key => `<span class="pa-1">${cloneStats[key]} ${key}</span>`)
+
+    return `
+      <div class="flex-row pa-2">
+        <span class=player-info>${fullName} | ${position}</span>
+        <div class="stats-row">
+          ${statRow.join('')}
+        </div>
+      </div>
+    `
+  })
+
+  return statsComp.join('')
+}
 
 // Render list of games w/ retrieved data
 
@@ -99,7 +106,7 @@ const setGameRow = (homeTeamInfo, visitorTeamInfo, gameInfo) => {
           <h2 id="team1Name">${homeTeamInfo.fullName}</h2>
         </div>
         <div class="flex-column">
-          <span id="date">${gameInfo.date}
+          <span id="date">${gameInfo.date}</span>
           <span id="quarter">${gameInfo.status}</span>
           <div class="flex-row">
             <span id="team1Score">${homeTeamInfo.score}</span>
@@ -117,8 +124,8 @@ const setGameRow = (homeTeamInfo, visitorTeamInfo, gameInfo) => {
 
 const setStatsRow = (homeTeamInfo, visitorTeamInfo, gameInfo) => {
   return `
-    <div class="flex-row stats-row" id="stats-${gameInfo.id}">
-      <h2>Game Stats</h2>
+    <div class="stats-col" id="stats-${gameInfo.id}">
+      <h2>${homeTeamInfo.fullName} Stats</h2>
       <div class="flex-column">
         <h4>Leading Scorer</h4>
         <span id="team1LeadScorer">${homeTeamInfo.leadingStats?.player?.full_name}</span>
@@ -128,6 +135,13 @@ const setStatsRow = (homeTeamInfo, visitorTeamInfo, gameInfo) => {
           <span>${homeTeamInfo.leadingStats?.assist} assist</span>
         </div>
       </div>
+      <hr>
+      <div class="flex-row pa-0">
+        <div class="stats-row">
+          ${returnTeamStats(homeTeamInfo)}
+        </div>
+      </div>
+      <h2>${visitorTeamInfo.fullName} Stats</h2>
       <div class="flex-column">
         <h4>Leading Scorer</h4>
         <span id="team2LeadScorer">${visitorTeamInfo.leadingStats?.player?.full_name}</span>
@@ -135,6 +149,12 @@ const setStatsRow = (homeTeamInfo, visitorTeamInfo, gameInfo) => {
           <span>${visitorTeamInfo.leadingStats?.points} pts</span>
           <span>${visitorTeamInfo.leadingStats?.rebounds} rebs</span>
           <span>${visitorTeamInfo.leadingStats?.assist} assist</span>
+        </div>
+      </div>
+      <hr>
+      <div class="flex-row pa-0">
+        <div class="stats-row">
+          ${returnTeamStats(visitorTeamInfo)}
         </div>
       </div>
     </div>
@@ -151,8 +171,8 @@ const render = (type, options) => {
     case 'spinner':
       gameRow = document.querySelector(`#game-${options.gameId}`)
 
-      gameRow.insertAdjacentHTML('beforeend', `
-        <div class="load-wrapp" id="stats-spinner">
+      gameRow.insertAdjacentHTML('afterend', `
+        <div class="load-wrapp" id="stats-spinner-${options.gameId}">
           <div class="loading-spinner">
             <div class="ring-2">
               <div class="ball-holder">
@@ -166,7 +186,7 @@ const render = (type, options) => {
       break;
     case 'stats':
       gameRow = document.querySelector(`#game-${options.gameId}`)
-      const spinner = gameRow.children.namedItem('stats-spinner')
+      const spinner = document.querySelector(`#stats-spinner-${options.gameId}`)
 
       if (options.removeElem) {
         options.removeElem.remove()
@@ -181,7 +201,7 @@ const render = (type, options) => {
       const { home_team, visitor_team, ...game } = games.find(game => game.id === options.gameId)
 
       gameRow.insertAdjacentHTML(
-          'beforeend',
+          'afterend',
           setStatsRow(home_team, visitor_team, game)
       )
 
@@ -213,9 +233,9 @@ const fetchGamesAndRender = async () => {
 }
 
 // save new game state into sessions storage & trigger re-render (clear all game rows & load spinner)
-const updateAndRender = async (gameId) => {
+const updateAndRender = (gameId) => {
   const gameRow = document.querySelector(`#game-${gameId}`)
-  const hasRenderedStats = gameRow.children.namedItem(`stats-${gameId}`)
+  const hasRenderedStats = document.querySelector(`#stats-${gameId}`)
   
   render("stats", { gameId, removeElem: hasRenderedStats })
   sessionStorage.setItem('games', JSON.stringify(games))
