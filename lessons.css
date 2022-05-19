@@ -9,17 +9,15 @@ a {
 }
 
 body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 8rem 1rem;
+  margin: 8rem auto;
   background-color: #eee;
+  width: 1024px;
 }
 hr {
   border: 0;
-  clear:both;
-  display:block;
-  width: 96%;               
+  clear: both;
+  display: block;
+  width: 96%;
   height: 1px;
   margin: 1rem;
   background-color: black;
@@ -64,10 +62,6 @@ hr {
 .loading-spinner .ball-holder {
   animation: loadingE 1.3s linear infinite;
   -webkit-animation: loadingE 1.3s linear infinite;
-}
-
-.game-container {
-  width: 1024px;
 }
 
 .game-container > div {
