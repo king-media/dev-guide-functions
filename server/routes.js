@@ -1,47 +1,36 @@
+const { match } = require('assert')
 const fs = require('fs')
 const path = require('path')
-const browserify = require('browserify')
 const cwd = process.cwd()
 
 const { gamesRequest, gameStatsRequest } = require('./games-data')
 
-let html, css
-
-function readHtmlAndAssets(reqUrl) {
-  const filePath = reqUrl === '/' ? '/lessons.html' : reqUrl
-
-  if (filePath.match('.html$|.css$')) {
-    html = fs.readFileSync(cwd + filePath)
-    css = fs.readFileSync(cwd + filePath)
-  }
-}
-
 const htmlRoute = (req, res) => {
-  if (req.url === '/' || req.url.match('.html$')) {
-    res.writeHeader(200, { 'Content-Type': 'text/html' })
-    res.write(html)
-    res.end()
-  }
+  const reqUrl = req.url
+  const filePath = reqUrl === '/' ? '/lessons.html' : reqUrl
+  const html = fs.readFileSync(cwd + filePath)
+
+  res.writeHeader(200, { 'Content-Type': 'text/html' })
+  res.write(html)
+  res.end()
 }
 
 const cssRoute = (req, res) => {
-  if (req.url.match('.css$')) {
-    res.writeHeader(200, { 'Content-Type': 'text/css' })
-    res.write(css)
-    res.end()
-  }
+  const css = fs.readFileSync(cwd + req.url)
+
+  res.writeHeader(200, { 'Content-Type': 'text/css' })
+  res.write(css)
+  res.end()
 }
 
 const jsRoute = (req, res) => {
-  if (req.url.match('.js$')) {
-      const jsFileName = req.url.split('/').pop()
-      const jsPath = path.join(cwd, req.url)
-      const jsFileStream = fs.createReadStream(jsPath, 'UTF-8')
-      const distPath = `${cwd}/dist/${jsFileName}`
+  const jsFileName = req.url.split('/').pop()
+  const jsPath = path.join(cwd, req.url)
+  const jsFileStream = fs.createReadStream(jsPath, 'UTF-8')
+  const distPath = `${cwd}/dist/${jsFileName}`
 
-    res.writeHead(200, { 'Content-Type': 'text/javascript' })
-    jsFileStream.pipe(res)
-  }
+  res.writeHead(200, { 'Content-Type': 'text/javascript' })
+  jsFileStream.pipe(res)
 }
 
 /* 
@@ -52,24 +41,22 @@ Think: "Make games request then send the results to the client. If there is an e
 */
 
 const gamesDataRoute = (req, res) => {
-  if (req.url.match('/games')) {
-    res.removeHeader('Transfer-Encoding')
+  res.removeHeader('Transfer-Encoding')
 
-    gamesRequest()
-      .then((gamesRes) => {
-        res.writeHeader(gamesRes.statusCode, {
-          'Content-Type': 'application/json',
-        })
+  gamesRequest()
+    .then((gamesRes) => {
+      res.writeHeader(gamesRes.statusCode, {
+        'Content-Type': 'application/json',
+      })
 
-        res.statusCode = gamesRes.statusCode
-        res.end(JSON.stringify(gamesRes))
-      })
-      .catch((err) => {
-        console.error(err)
-        res.statusCode = err.statusCode
-        res.end(JSON.stringify(err))
-      })
-  }
+      res.statusCode = gamesRes.statusCode
+      res.end(JSON.stringify(gamesRes))
+    })
+    .catch((err) => {
+      console.error(err)
+      res.statusCode = err.statusCode
+      res.end(JSON.stringify(err))
+    })
 }
 
 const gameStatsDataRoute = (req, res) => {
@@ -108,11 +95,20 @@ const gameStatsDataRoute = (req, res) => {
 
 module.exports = {
   routes: (req, res) => {
-    readHtmlAndAssets(req.url)
-    htmlRoute(req, res)
-    cssRoute(req, res)
-    jsRoute(req, res)
-    gamesDataRoute(req, res)
-    gameStatsDataRoute(req, res)
+    const reqUrl = req.url
+    // keyPair<matchStr, routeHandler>
+    const routeHandlers = {
+      '/(?!.)|.html$': htmlRoute,
+      '.css$': cssRoute,
+      '.js$': jsRoute,
+      '/games': gamesDataRoute,
+      '/stats': gameStatsDataRoute,
+    }
+
+    const route = Object.keys(routeHandlers).find((matchStr) =>
+      reqUrl.match(matchStr)
+    )
+
+    if (route) routeHandlers[route](req, res)
   },
 }

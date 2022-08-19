@@ -258,11 +258,22 @@ const updateAndRender = (gameId) => {
 }
 
 refreshBtn.onclick = () => {
-  sessionStorage.clear()
-  loadingSpinner.style.display = 'initial'
-  gameContainer.replaceChildren(loadingSpinner, refreshBtn)
+  /* 
+    TODO 
+    1. Clear storage
 
-  fetchGamesAndRender()
+    2. Show spinner (while loading)
+
+    3. Update gameContainer and rerender
+
+    4. Fetch game data and rerender (remove spinner)
+  */
 }
 
 fetchGamesAndRender()
+
+// sessionStorage.clear()
+// loadingSpinner.style.display = 'initial'
+// gameContainer.replaceChildren(loadingSpinner, refreshBtn)
+
+// fetchGamesAndRender()
