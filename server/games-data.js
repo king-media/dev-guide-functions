@@ -41,28 +41,34 @@ const mapGameData = (data) => {
 
 const mapPlayerStats = (teamId, playerStats) => {
   let stats = playerStats
-    .filter(data => data.team.id === teamId)
+    .filter((data) => data.team.id === teamId)
     .map((teamStats) => ({
       ...teamStats,
       gameId: teamStats.game.id,
       teamId: teamStats.team.id,
     }))
-  
-  const leadingStats = stats.find(teamStats => teamStats.pts === Math.max(...stats.map(allStats => allStats.pts)))
-  
+
+  const leadingStats = stats.find(
+    (teamStats) =>
+      teamStats.pts === Math.max(...stats.map((allStats) => allStats.pts))
+  )
+
   if (leadingStats) {
-    return { 
-        stats, 
-        leadingStats: {
-          player: { ...leadingStats.player, full_name: `${leadingStats.player.first_name} ${leadingStats.player.last_name}` },
-          team: leadingStats.team,
-          points: leadingStats.pts,
-          assist: leadingStats.ast,
-          rebounds: leadingStats.reb
-        }
-      }
+    return {
+      stats,
+      leadingStats: {
+        player: {
+          ...leadingStats.player,
+          full_name: `${leadingStats.player.first_name} ${leadingStats.player.last_name}`,
+        },
+        team: leadingStats.team,
+        points: leadingStats.pts,
+        assist: leadingStats.ast,
+        rebounds: leadingStats.reb,
+      },
+    }
   }
-  
+
   return { stats }
 }
 
@@ -76,7 +82,7 @@ const mapGameStatsData = (data, homeTeamId, visitorTeamId) => {
 /* 
 NOTES:
 
-This method grabs the data neccessary to fetch the last 10 or so games.
+This method grabs the data necessary to fetch the last 10 or so games.
 The method returns an async Promise that can either "resolves" (no errors & has data) or "rejects" (errors & does not have data).
 
 PSEUDO - I "metaRequest" promise(toResolve, orToReject) => { ...when code } is done.

@@ -1,4 +1,3 @@
-const { match } = require('assert')
 const fs = require('fs')
 const path = require('path')
 const cwd = process.cwd()
@@ -109,6 +108,11 @@ module.exports = {
       reqUrl.match(matchStr)
     )
 
-    if (route) routeHandlers[route](req, res)
+    if (route) {
+      routeHandlers[route](req, res)
+    } else {
+      res.statusCode = '400'
+      res.end(JSON.stringify({ statusCode: '400', message: 'Bad Request' }))
+    }
   },
 }
